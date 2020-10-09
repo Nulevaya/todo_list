@@ -1,0 +1,78 @@
+<div class="text-center header-text-container">
+  <h2>SIMPLE TODO LIST</h2>
+  <h5>FROM NULEVAYA</h5>
+</div>
+
+<% @projects.each do |project| %>
+  <div class="card" id=<%= "project-#{project.id}"%>>
+    <div class="card-header bg-primary project-edit align-items-center">
+      <%= form_with url:"/projects/#{project.id}", method: :put, html: { class: "project-edit-form" } do |form| %>
+        <%= form.text_field :name, class: "form-control task-name-input-field", placeholder: project.name %>
+        <%= form.submit "Save", class: "btn btn-success save-project-button" %>
+      <% end %>
+    </div>
+    <div class="card-header bg-primary white-text project-header">
+      <div class="width-89 display-inl-bl">
+        <h5 class="margin-top-for-header">
+          <i class="far fa-calendar-check fa-lg"></i>
+          <%= project.name =%>
+        </h5>
+      </div>
+      <div class="width-10 display-inl-bl header-task-instruments">
+        <h5 class="margin-top-for-header text-right">
+          <i class="fas fa-pencil-alt edit-project"></i> |
+          <%= link_to project_path(project), method: :delete, data: { confirm: 'Delete?' }, class: "trash-icon-white" do %>
+            <i class="fas fa-trash-alt"></i>
+          <% end %>
+        </h5>
+      </div>
+    </div>
+    <div class="card-header bg-light">
+      <div class="form-row align-items-center">
+        <%= form_with url:"/projects/#{project.id}/tasks/", method: :post, html: { class: "task-form" } do |form| %>
+          <%= form.text_field :name, class: "form-control task-name-input-field" %>
+          <%= form.submit "Add Task", class: "btn btn-success create-task-button" %>
+        <% end %>
+      </div>
+    </div>
+    <div class="card-body no-padding">
+      <table class="table table-hover magrin-bottom-0 table-bordered">
+        <tbody class="sortable-tasks">
+          <% project.tasks.order(position: :asc).each do |task| %>
+            <tr class="task-row" id=<%= "task-#{task.id}" %>>
+              <td class="col-7 center">
+                <%= check_box_tag "checkbox-#{task.id}", "yes", task.completed?, class: "form-check-input task-status" %>
+              </td>
+              <td class="col-73">
+                <div class="table-task-edit-form">
+                  <%= form_with url:"/projects/#{project.id}/tasks/#{task.id}", method: :put, html: { class: "task-form" } do |form| %>
+                    <%= form.text_field :name, class: "form-control task-name-input-field", placeholder: task.name %>
+                    <%= form.submit "Save", class: "btn btn-success save-task-button" %>
+                  <% end %>
+                </div>
+                <div class="table-task-name">
+                  <%= task.name %>
+                </div>
+              </td>
+              <td class="col-20 fa-grey center">
+                <div class="task-instruments">
+                  <i class="fas fa-arrows-alt-v"></i> |
+                  <i class="fas fa-pencil-alt edit-task"></i> |
+                  <%= link_to project_task_path(project, task), method: :delete, data: { confirm: 'Delete?' }, class: "fa-grey" do %>
+                    <i class="fas fa-trash-alt"></i>
+                  <% end %>
+                </div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<% end %>
+<div class="d-flex justify-content-center">
+  <%= link_to projects_path, method: :post, class: "btn btn-primary btn-margin" do %>
+    <i class="fas fa-plus fa-lg"></i> Add TODO list
+  <% end %>
+  
+</div>
