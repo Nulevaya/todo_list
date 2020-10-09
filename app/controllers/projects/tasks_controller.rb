@@ -5,10 +5,11 @@ module Projects
 
     def create
       project_tasks = @project.tasks.order(position: :asc)
+      new_position = project_tasks.last ? project_tasks.last.position + 1 : 1
 
       task = project_tasks.new(name: params[:name], 
                                status: "in_progress",
-                               position: project_tasks.last.position + 1)
+                               position: new_position)
 
       if task.save!
         redirect_to projects_path
