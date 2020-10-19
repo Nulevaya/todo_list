@@ -65,8 +65,8 @@ $(document).on('turbolinks:load', function() {
   })
 
   $(document).on("click", ".edit-task", function(){
-    let taskName = $(this).parent().parent().parent().find(".table-task-name");
-    let editTaskRow = $(this).parent().parent().parent().find(".table-task-edit-form");
+    let taskName = $(this).parent().parent().parent().parent().find(".table-task-name");
+    let editTaskRow = $(this).parent().parent().parent().parent().find(".table-task-edit-form");
 
     taskName.css('display', 'none');
     editTaskRow.css('display', 'block');
