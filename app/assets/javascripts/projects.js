@@ -1,10 +1,55 @@
 $(document).on('turbolinks:load', function() {
+  $('.datetimepicker').datetimepicker();
+
   $(document).on("mouseover", ".task-row", function(){$(this).find(".task-instruments").css('visibility', 'visible')})
             .on("mouseout", ".task-row", function(){$(this).find(".task-instruments").css('visibility', 'hidden')});
+
+  $(document).on("mouseover", ".task-row", function(){$(this).find(".deadline").css('visibility', 'hidden')})
+            .on("mouseout", ".task-row", function(){$(this).find(".deadline").css('visibility', 'visible')});
 
   $(document).on("mouseover", ".card-header", function(){$(this).find(".header-task-instruments").css('visibility', 'visible')})
             .on("mouseout", ".card-header", function(){$(this).find(".header-task-instruments").css('visibility', 'hidden')});
   
+  $(document).on("click", ".fa-calendar-day", function() {
+    let column = $(this).parent().parent().parent();
+    let taskInstrumentsContainer = $(this).parent().parent();
+    let dateTimeInput = column.find(".datetime");
+
+    dateTimeInput.css('display', 'flex');
+    taskInstrumentsContainer.css('display', 'none');
+  })
+
+  $(document).on("click", ".set-deadline-button", function() {
+    let column = $(this).parent().parent();
+    let dateTimeInput = $(this).parent()
+    let dateTimeInputField = dateTimeInput.find(".datetimepicker")
+    let taskInstrumentsContainer = column.find('.task-instruments-container');
+    let deadLineField = taskInstrumentsContainer.find(".deadline")
+
+    let projectIdArray = this.closest(".card").id.split("-");
+    let projectId = projectIdArray[projectIdArray.length - 1];
+    let taskIdArray = this.closest(".task-row").id.split("-");
+    let taskId = taskIdArray[taskIdArray.length - 1];
+
+    let newValue = dateTimeInputField.val();
+
+    dateTimeInput.css('display', 'none');
+    taskInstrumentsContainer.css('display', 'block');
+
+    $.ajax({
+      type: "POST",
+      headers: {
+          'X-Transaction': 'POST Example',
+          'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+      },
+      url: `projects/${projectId}/tasks/${taskId}/set_deadline`,
+      dataType: "json",
+      data: {"deadline": `${newValue}`}
+    });
+
+    deadLineField.html(newValue);
+  })
+
   $(document).on("click", ".edit-project", function(){
     let generalHeader = $(this).parent().parent().parent();
     let editProjectHeader = generalHeader.parent().find(".project-edit");

@@ -46,7 +46,7 @@
               <td class="col-73">
                 <div class="table-task-edit-form">
                   <%= form_with url:"/projects/#{project.id}/tasks/#{task.id}", method: :put, html: { class: "task-form" } do |form| %>
-                    <%= form.text_field :name, class: "form-control task-name-input-field", placeholder: task.name %>
+                    <%= form.text_field :name, class: "form-control task-name-input-field", value: task.name %>
                     <%= form.submit "Save", class: "btn btn-success save-task-button" %>
                   <% end %>
                 </div>
@@ -55,12 +55,22 @@
                 </div>
               </td>
               <td class="col-20 fa-grey center">
-                <div class="task-instruments">
-                  <i class="fas fa-arrows-alt-v"></i> |
-                  <i class="fas fa-pencil-alt edit-task"></i> |
-                  <%= link_to project_task_path(project, task), method: :delete, data: { confirm: 'Delete?' }, class: "fa-grey" do %>
-                    <i class="fas fa-trash-alt"></i>
-                  <% end %>
+                <div class="datetime">
+                  <input class="datetimepicker" type="text" value="<%= task.deadline&.strftime("%Y/%m/%d %H:%M") %>">
+                  <button class="btn btn-success set-deadline-button"> OK </button>
+                </div>
+                <div class="task-instruments-container">
+                  <div class="deadline">
+                    <%= task.deadline&.strftime("%Y/%m/%d %H:%M") %>
+                  </div>
+                  <div class="task-instruments">
+                    <i class="fas fa-arrows-alt-v"></i> |
+                    <i class="fas fa-pencil-alt edit-task"></i> |
+                    <i class="fas fa-calendar-day"></i> |
+                    <%= link_to project_task_path(project, task), method: :delete, data: { confirm: 'Delete?' }, class: "fa-grey" do %>
+                      <i class="fas fa-trash-alt"></i>
+                    <% end %>
+                  </div>
                 </div>
               </td>
             </tr>

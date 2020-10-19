@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :tasks, only: %i(create update destroy), controller: 'projects/tasks' do
       resource :reorder, only: :create, controller: 'projects/tasks/reorder'
       resource :toggle_status, only: :create, controller: 'projects/tasks/toggle_status'
+      resource :set_deadline, only: :create, controller: 'projects/tasks/set_deadline'
     end
   end
 end
